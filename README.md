@@ -1,5 +1,5 @@
 <h1>SSH Web client</h1>
-<p>Run your ssh client in your browser</p>
+<p>SSH Client built on top of a web server</p>
 
 ![ScreenShot](https://raw.github.com/Tonyy18/ssh-web-client/master/app/resource/images/logic.png)
 
