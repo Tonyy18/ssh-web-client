@@ -21,7 +21,11 @@ class SSH:
 
     def exec(self, command):
         stdin, stdout, stderr = self.client.exec_command(command)
-        content = stdout.read().decode("utf8")
+        content = stdout.read()
+        try:
+            content = content.decode("utf8")
+        except:
+            pass
 
         if("ls" in command.split(" ")):
             content = content.split("\n")
@@ -55,16 +59,22 @@ def remove_dash(file):
 
 def combine_files(files, folders):
 
+    results = []
+
     for a in range(0, len(folders)):
         folders[a] = folders[a][:-1] #remove dash
+        results.append({
+            "type": "folder",
+            "name": folders[a]
+        }) #remove dash
 
     _files = []
     for a in range(0, len(files)):
         #Remove folders
         if(files[a] not in folders):
-            _files.append(files[a])
+            results.append({
+                "type": "file",
+                "name": files[a]
+            })
 
-    return {
-        "files": _files,
-        "folders": folders
-    }
+    return results

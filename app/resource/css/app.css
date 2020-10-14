@@ -48,6 +48,9 @@ h5 {
 #directory > li.list-group-item.selected {
     background-color: #F5F5F5;
 }
+#directory > li.list-group-item.selected {
+    border-left: 3px solid lightblue;
+}
 #directory > li.list-group-item .icon-right {
     display: none;
     float: right;

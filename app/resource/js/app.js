@@ -9,28 +9,18 @@ const icons = {
 }
 function update_dir(data) {
 
-    let folders = []
-    let files = [];
     const dir = $("#directory").empty()
-    if("folders" in data) folders = data["folders"];
-    if("files" in data) files = data["files"];
 
     removeSelection($("#directory").find("li"), true);
-
-    if(folders.length + files.length == 0) {
+    if(data.length == 0) {
         //No files to display
         dir.html('<li class="empty"><h4>Empty directory</h4></li>')
         return;
     }
     
-    for(let a = 0; a < folders.length; a++) {
-        const folder = folders[a];
-        const dom = buildDom("folder", folder);
-        dir.append(dom);
-    }
-    for(let a = 0; a < files.length; a++) {
-        const file = files[a];
-        const dom = buildDom("file", file);
+    for(let a = 0; a < data.length; a++) {
+        const file = data[a];
+        const dom = buildDom(file.type, file.name);
         dir.append(dom);
     }
 }
@@ -91,9 +81,12 @@ $("#directory").on("dblclick", "li", function(e) {
         }
         path += name
         request_dir(
+            path,
             function(data) {
                 removeLoader(el)
                 el.removeClass("selected")
+                update_dir(data)
+                update_route()
             }
         )
     } else {
@@ -118,8 +111,10 @@ $("#update").click(function() {
     const html = $(this).html()
     $(this).html(spinner)
     const el = $(this)
-    request_dir(function() {
+    request_dir(path,function(data) {
         el.html(html)
+        update_dir(data)
+        update_route()
     })
 })
 
@@ -140,17 +135,18 @@ $(".breadcrumb").on("click", "li a", function() {
             }
         }
     }
-    request_dir()
+    request_dir(path, function(data) {
+        update_dir(data)
+        update_route()
+    })
 })
 
-function request_dir(success = function(data){}, error = function(data){}) {
+function request_dir(_path = "/", success = function(data){}, error = function(data){}, dpath=false) {
     $.ajax({
         type: "POST",
         url: "/ssh/get/dir",
-        data: {path: path},
+        data: {path: _path},
         success: function(data) {
-            update_dir(data)
-            update_route()
             loading = false
             success(data)
         },
@@ -160,7 +156,6 @@ function request_dir(success = function(data){}, error = function(data){}) {
         }
     })
 }
-
 
 function delete_files(file, success = function(data){}, error = function(data){}) {
     $.ajax({
@@ -175,12 +170,59 @@ function delete_files(file, success = function(data){}, error = function(data){}
         }
     })
 }
-/* zip.generateAsync({type: "blob"}).then(function(content) {
-    FileSaver.saveAs(content, host + ".zip");
-}); */
-function download(paths = []) {
+
+function syncReq(method, url, data) {
+    return $.ajax({
+        type: method,
+        url: url,
+        data: data,
+        async: false
+    }).responseText;
+}
+
+function download(data=[]) {
+
+    //Must include the type (file or folder) and the file name
+
     const zip = new JSZip();
-    
+    let ab_path = path; //Absolute path. Used to query ssh directories
+    let _path = ""; //Used inside the zip
+
+    const addFile = function(ab_path, _path, fileName) {
+        let content = syncReq("post", "/ssh/get/file", {path:ab_path + "/" + fileName});
+        zip.file(_path + fileName, content);
+    }
+
+    const addFolder = function(ab_path, _path, name) {
+        ab_path += "/" + name
+        _path += name + "/"
+        let files = syncReq("post", "/ssh/get/dir", {path: ab_path});
+        files = JSON.parse(files);
+        for(let b = 0; b < files.length; b++) {
+            if(files[b].type == "file") {
+                addFile(ab_path, _path, files[b].name);
+            } else {
+                addFolder(ab_path, _path, files[b].name)
+            }
+        }
+    }
+    console.log(data);
+    for(let a = 0; a < data.length; a++) {
+        _path = "";
+        ab_path = path;
+        const file = data[a];
+        if(file.type == "file") {
+            addFile(ab_path, _path, file.name);
+        } else if(file.type == "folder") {
+            addFolder(ab_path, _path, file.name)
+        }
+        removeLoader($("#directory").find("li[data-name='" + file.name + "']"));
+    }
+
+    //Force download
+    zip.generateAsync({type: "blob"}).then(function(content) {
+        FileSaver.saveAs(content, host + ".zip");
+    });
 }
 
 $("#directory").on("click", ".delete-btn", function() {
@@ -191,7 +233,11 @@ $("#directory").on("click", ".delete-btn", function() {
     $(this).parent().remove()
 
 }).on("click", ".download-btn", function() {
-    download([$(this).parent()])
+    const target = $(this).parent()
+    download([{
+        "type": target.attr("data-type"),
+        "name": target.attr("data-name")
+    }])
 })
 
 $("#delete").click(function() {
@@ -205,7 +251,16 @@ $("#delete").click(function() {
     delete_files(files);
 })
 $("#download").click(function() {
-    download(selectedPaths);
+    const list = []
+    for(let a = 0; a < selected.length; a++) {
+        const dom = selected[a];
+        addLoader(dom);
+        list.push({
+            "type": dom.attr("data-type"),
+            "name": dom.attr("data-name")
+        })
+    }
+    download(list);
 })
 $(document).click(function(e) {
     const target = $(e.target)
@@ -230,7 +285,6 @@ function removeSelection(dom, all = false) {
         selectedPaths = []
     } else {
         const index = selectedPaths.indexOf(path + "/" + $(dom).attr("data-name"));
-        console.log(index)
         if(index > -1 && !all) {
             selected.splice(index, 1);
             selectedPaths.splice(index, 1);
@@ -247,7 +301,13 @@ const read_file = (file, callback) => {
         url: "/ssh/get/file",
         data: {path:file},
         success: function(data) {
-            if(callback && typeof callback == "function") callback(data["content"]);
+            let content = data
+            try {
+                content = JSON.parse(content)
+            } catch(e) {
+                
+            }
+            if(callback && typeof callback == "function") callback(content);
         }
     })
     return false

@@ -9,6 +9,7 @@
     <script src="/resource/js/jszip.min.js"></script>
     <script>module = {}</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+    <script src="/resource/js/jszip-utils.min.js"></script>
     <script>const FileSaver = module.exports;</script>
     <link rel="stylesheet" type="text/css" href="/resource/css/app.css">
 </head>
@@ -20,6 +21,7 @@
         <a type="button" class="btn btn-light">Console</a>
         <a type="button" class="btn btn-light" id="update">Update</a>
         <a type="button" class="btn btn-light" href="/ssh/close">Disconnected</a>
+        <p>Logged in as {{ data["user"] }}</p>
     </header>
     
     <ol class="breadcrumb" id="route">
