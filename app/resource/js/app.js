@@ -57,8 +57,8 @@ function update_route() {
 }
 
 function addLoader(el) {
-    el.find(".main-icon").hide()
-    el.prepend(spinner)
+    $(el).find(".main-icon").hide()
+    $(el).prepend(spinner.clone())
 }
 
 function removeLoader(el) {
@@ -69,7 +69,6 @@ function removeLoader(el) {
 $("#directory").on("dblclick", "li", function(e) {
     e.preventDefault();
     if(loading) return;
-    const spinner = $('<div class="spinner spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>')
     const type = $(this).attr("data-type");
     const name = $(this).attr("data-name");
     const el = $(this);
@@ -206,7 +205,7 @@ function download(data=[]) {
             }
         }
     }
-    console.log(data);
+
     for(let a = 0; a < data.length; a++) {
         _path = "";
         ab_path = path;
@@ -234,10 +233,14 @@ $("#directory").on("click", ".delete-btn", function() {
 
 }).on("click", ".download-btn", function() {
     const target = $(this).parent()
-    download([{
-        "type": target.attr("data-type"),
-        "name": target.attr("data-name")
-    }])
+    addLoader(target);
+    setTimeout(function() {
+        //Delay to make it fancy
+        download([{
+            "type": target.attr("data-type"),
+            "name": target.attr("data-name")
+        }])
+    }, 500);
 })
 
 $("#delete").click(function() {
@@ -260,7 +263,9 @@ $("#download").click(function() {
             "name": dom.attr("data-name")
         })
     }
-    download(list);
+    setTimeout(function() {
+        download(list);
+    }, 500);
 })
 $(document).click(function(e) {
     const target = $(e.target)
