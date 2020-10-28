@@ -1,6 +1,5 @@
 <h1>SSH Web client</h1>
 <p>SSH Client built on top of a web server</p>
-<p>Under active development</p>
 
 ![ScreenShot](https://raw.github.com/Tonyy18/ssh-web-client/master/app/resource/images/logic.png)
 
