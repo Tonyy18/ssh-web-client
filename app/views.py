@@ -1,4 +1,4 @@
-from lib.shortcuts import render, redirect, response
+from lib.shortcuts import render, redirect, response, is_bytes, select_files
 import lib.ssh as ssh
 from urllib.parse import unquote
 
@@ -27,7 +27,7 @@ def ssh_connect(data):
 def ssh_close(request):
     global client
     if(client != None and client.connected):
-        client.client.close()
+        client.disconnect()
         client = None
     return redirect("/")
 
@@ -63,7 +63,8 @@ def view_file(request):
 def read_file(request):
     global client
     if(client != None and client.connected):
-        return response(client.read_file(request["body"]["path"]))
+        content = client.read_file(request["body"]["path"])
+        return response(str(content))
     return response(status=404)
 
 def write_file(request):
@@ -77,6 +78,25 @@ def download(request):
     global client
     if(client != None and client.connected):
         client.download("app.js", request["body"]["file"])
+        return response()
+    return response(status=404)
+
+def upload_files(request):
+    return upload(request)
+
+def upload_folder(request):
+    return upload(request, True)
+
+def upload(request, folder=False):
+    global client
+    if(client != None and client.connected):
+        files = select_files(folder=folder)
+        location = request["body"]["path"]
+        if(type(files["selected"]) == tuple and len(files["selected"]) > 0):
+            if(files["folders"]):
+                client.upload_folders(location, files["selected"])
+            else:
+                client.upload_files(location, files["selected"])
         return response()
     return response(status=404)
 

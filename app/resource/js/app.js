@@ -96,6 +96,7 @@ $("#directory").on("dblclick", "li", function(e) {
     }
     
 }).on("click", "li", function(e) {
+    console.log(e)
     if($(this).hasClass("selected")) {
         removeSelection($(this))
         return;
@@ -188,8 +189,15 @@ function download(data=[]) {
     let _path = ""; //Used inside the zip
 
     const addFile = function(ab_path, _path, fileName) {
-        let content = syncReq("post", "/ssh/get/file", {path:ab_path + "/" + fileName});
-        zip.file(_path + fileName, content);
+        let data = syncReq("post", "/ssh/get/file", {path:ab_path + "/" + fileName});
+        let options = {}
+        try {
+            JSON.parse("{content: '" + data + "'}")
+        } catch(e) {
+            options["binary"] = true
+            console.log(data)
+        }
+        zip.file(_path + fileName, data, options);
     }
 
     const addFolder = function(ab_path, _path, name) {
@@ -224,14 +232,14 @@ function download(data=[]) {
     });
 }
 
-$("#directory").on("click", ".delete-btn", function() {
-
+$("#directory").on("click", "li > .delete-btn", function(e) {
+    edited = true;
     const name = $(this).parent().attr("data-name");
     const file = path + "/" + name
     delete_files(file)
     $(this).parent().remove()
 
-}).on("click", ".download-btn", function() {
+}).on("click", ".download-btn", function(e) {
     const target = $(this).parent()
     addLoader(target);
     setTimeout(function() {
@@ -317,3 +325,29 @@ const read_file = (file, callback) => {
     })
     return false
 }
+
+$("#upload, #upload-folder").click(function() {
+    let endpoint = "/upload_files"
+    if($(this).text().toLowerCase().includes("folder")) {
+        endpoint = "/upload_folder"
+    }
+    const targetButton = $(this)
+    const btnHtml = targetButton.html()
+    targetButton.html(spinner)
+    $.ajax({
+        type: "post",
+        data: {
+            path: path
+        },
+        url: endpoint,
+        success: function() {
+            request_dir(path, (data) => {
+                update_dir(data)
+                targetButton.html(btnHtml)
+            })
+        },
+        error: function() {
+            targetButton.html(btnHtml)
+        }
+    })
+})

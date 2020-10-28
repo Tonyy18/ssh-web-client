@@ -46,11 +46,12 @@
     <div class="dir-actions">
         <a type="button" class="btn btn-light" id="new-file">New file</a>
         <a type="button" class="btn btn-light" id="new-folder">New folder</a>
-        <a type="button" class="btn btn-light" id="upload">Upload</a>
+        <a type="button" class="btn btn-light" id="upload">Upload files</a>
+        <a type="button" class="btn btn-light" id="upload-folder">Upload folder</a>
         <a type="button" class="btn btn-light" id="download" style="display: none">Download</a>
         <a type="button" class="btn btn-light" id="delete" style="display: none">Delete</a>
     </div>
-    <ul class="list-group loading" id="directory">
+    <ul class="list-group" id="directory">
         {% for folder in data["folders"] %}
         <li class="list-group-item" data-type="folder" data-name="{{folder}}">
             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder-fill main-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

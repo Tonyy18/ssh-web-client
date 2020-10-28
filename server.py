@@ -47,9 +47,13 @@ class Server(BaseHTTPRequestHandler):
 				"status": 404
 			}
 
-		self.send_response(response["status"])
-		for key in response["headers"]:
-			self.send_header(key, response["headers"][key])
+		if("status" in response):
+			self.send_response(response["status"])
+		else:
+			self.send_response(404)
+		if("headers" in response):
+			for key in response["headers"]:
+				self.send_header(key, response["headers"][key])
 
 		self.end_headers()
 		data = ""
