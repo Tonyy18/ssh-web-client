@@ -54,7 +54,7 @@ def view_file(request):
     if(client != None and client.connected):
         return render("file.html", {
             "host": client.host,
-            "content": client.read_file(request["query"]["path"]),
+            "content": client.read_file(request["query"]["path"]).replace("<", "&lt;"),
             "path": request["query"]["path"]
         })
     else:
@@ -63,9 +63,7 @@ def view_file(request):
 def read_file(request):
     global client
     if(client != None and client.connected):
-        return response({
-            "content": client.read_file(request["body"]["path"])
-        }, content_type="application/json")
+        return response(client.read_file(request["body"]["path"]))
     return response(status=404)
 
 def write_file(request):
@@ -99,6 +97,7 @@ def server(request):
 
         return render("server.html", {
             "host": client.host,
+            "user": client.username,
             "folders": folders,
             "files": files
         })
