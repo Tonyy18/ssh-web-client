@@ -10,5 +10,7 @@ paths = {
     "/file": views.view_file,
     "/ssh/get/file": views.read_file,
     "/ssh/write/file": views.write_file,
-    "/ssh/download": views.download
+    "/ssh/download": views.download,
+    "/upload_files": views.upload_files,
+    "/upload_folder": views.upload_folder
 }
