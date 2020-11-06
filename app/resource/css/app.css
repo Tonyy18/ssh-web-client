@@ -44,8 +44,27 @@ h5 {
     margin-left: 15px;
     display: inline-block;
 }
-#directory > li.list-group-item:hover,
-#directory > li.list-group-item.selected {
+#directory > li input {
+    height: 1.5em;
+    margin-left: 15px;
+    width: calc(100% - 50px);
+    padding: 0px;
+    outline: none;
+    border: none;
+    display: none;
+    background-color: #FAFAFA;
+}
+#directory > li.editing {
+    border-left: 3px solid red;
+}
+#directory > li.editing input {
+    display: inline-block;
+}
+#directory > li.editing .text {
+    display: none;
+}
+#directory > li.list-group-item.interactive:hover,
+#directory > li.list-group-item.interactive.selected {
     background-color: #F5F5F5;
 }
 #directory > li.list-group-item.selected {
@@ -59,7 +78,7 @@ h5 {
 #directory > li.list-group-item .icon-right svg {
     color: DarkGray;
 }
-#directory > li.list-group-item:hover .icon-right  {
+#directory > li.list-group-item.interactive:hover .icon-right  {
     display: block;
 }
 #directory > li.list-group-item .icon-right:hover svg {

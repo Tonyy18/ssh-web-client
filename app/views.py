@@ -123,5 +123,25 @@ def server(request):
         })
     else:
         return redirect("/")
-    
+
+def rename(request):
+    global client
+    if(client != None and client.connected):
+        client.rename(request["body"]["path"], request["body"]["original"], request["body"]["updated"])
+        return response("success")
+    return response(status=404)
+
+def create_file(request):
+    global client
+    if(client != None and client.connected):
+        client.create_file(request["body"]["location"], request["body"]["name"])
+        return response("success")
+    return response(status=404)
+
+def create_folder(request):
+    global client
+    if(client != None and client.connected):
+        client.create_folder(request["body"]["location"], request["body"]["name"])
+        return response("success")
+    return response(status=404)
     

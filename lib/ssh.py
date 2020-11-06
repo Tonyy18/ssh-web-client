@@ -81,6 +81,23 @@ class SSH:
         for f in files:
             self.upload(location, f)
 
+    def rename(self, path, original, updated):
+        original = path + "/" + original
+        updated = path + "/" + updated
+        res = self.exec("mv " + original + " " + updated)
+
+    def create_file(self, location, file):
+        if(location[len(location) - 1] != "/"):
+            location += "/"
+        path = location + file
+        self.exec("touch " + path)
+
+    def create_folder(self, location, folder):
+        if(location[len(location) - 1] != "/"):
+            location += "/"
+        path = location + folder
+        self.exec("mkdir " + path)
+
 def get_name(path):
     split = path.split("/")
     filename = split[len(split) - 1]
