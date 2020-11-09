@@ -3,7 +3,6 @@ from jinja2 import Template
 import json
 import tkinter as tk
 from tkinter import filedialog
-import easygui
 
 def response(content = "", status = 200, content_type = "text/html"):
     if("json" in content_type):

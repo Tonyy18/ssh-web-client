@@ -64,7 +64,10 @@ class Server(BaseHTTPRequestHandler):
 		except(UnicodeDecodeError, AttributeError):
 			#Bytes like object (images). Can't be encoded
 			pass
-		self.wfile.write(data)
+		try:
+			self.wfile.write(data)
+		except:
+			print("Couldn't return the response")
 
 	def log_message(self, format, *args):
 		return
@@ -78,7 +81,7 @@ def run():
 		print()
 		print("SSH Client hosted on " + address)
 		print()
-		""" webbrowser.open(address) """
+		webbrowser.open(address)
 		webServer.serve_forever()
 	except KeyboardInterrupt:
 		webServer.server_close()
