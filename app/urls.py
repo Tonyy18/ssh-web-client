@@ -15,5 +15,6 @@ paths = {
     "/upload_folder": views.upload_folder,
     "/ssh/rename": views.rename,
     "/create/file": views.create_file,
-    "/create/folder": views.create_folder
+    "/create/folder": views.create_folder,
+    "/shell": views.shell
 }

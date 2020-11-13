@@ -81,7 +81,7 @@ def run():
 		print()
 		print("SSH Client hosted on " + address)
 		print()
-		webbrowser.open(address)
+		#webbrowser.open(address)
 		webServer.serve_forever()
 	except KeyboardInterrupt:
 		webServer.server_close()

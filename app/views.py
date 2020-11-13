@@ -145,3 +145,13 @@ def create_folder(request):
         return response("success")
     return response(status=404)
     
+#Shell / Console
+
+def shell(request):
+    global client
+    if(client != None and client.connected):
+        return render("shell.html", {
+            "host": client.host,
+            "user": client.username
+        })
+    return redirect("/")
