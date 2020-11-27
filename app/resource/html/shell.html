@@ -8,7 +8,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="/resource/css/app.css">
 </head>
-<body id="console">
+<body id="shell">
 <div class="container">
     <header>
         <h1>Host: {{ data["host"] }}</h1>
@@ -16,9 +16,56 @@
         <a type="button" class="btn btn-light" href="/ssh/close">Disconnected</a>
         <p>Logged in as {{ data["user"] }}</p>
     </header>
+    <div class="shell">
+        <div class="row" id="input">
+            <div class="prefix">{{ data["user"] }}@{{ data["host"] }}:~$</div>
+            <div class="text"><input type="text"></div>
+        </div>
+    </div>
 </div>
 <script>
+const user = '{{ data["user"] }}';
+const host = '{{ data["host"] }}';
 const spinner = $('<div class="spinner spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>')
+$(".shell").click(function() {
+    $(".shell input").focus();
+})
+$(".shell #input input").keypress(function(e) {
+    if(e.keyCode != 13) return; //Not an enter key
+    const val = $.trim($(this).val());
+    const row = build_row(val)
+    row.insertBefore($("#input"));
+
+    $.ajax({
+        type: "post",
+        url: "/exec",
+        data: {
+            command: val
+        },
+        success: function(response) {
+            split = response.split("\n")
+            for(let a = 0; a < split.length; a++) {
+                row2 = build_row(split[a], false)
+                row2.insertBefore($("#input"));
+            }
+        },
+        error: function() {
+        }
+    })
+    $(".shell #input input").val("")
+
+})
+
+function build_row(text, _host = true) {
+    const row = $("<div class='row'></div>")
+    if(_host) {
+        const prefix = $("<div class='prefix'>" + user + "@" + host + ":</div>")
+        row.append(prefix)
+    }
+    const _text = $("<div class='text'>" + text + "</div>")
+    row.append(_text)
+    return row;
+}
 </script>
 </body>
 </html>

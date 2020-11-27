@@ -1,4 +1,5 @@
-let path = "/root";
+let path = '{{ data["dir"] }}';
+console.log(path);
 let loading = false;
 let selected = [];
 let selectedPaths = [];
@@ -58,6 +59,7 @@ function update_route() {
     }
     $("title").text(host + ":" + path);
 }
+update_route()
 
 function add_loader(el) {
     $(el).find(".main-icon").hide()

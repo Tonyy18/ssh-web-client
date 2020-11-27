@@ -16,5 +16,7 @@ paths = {
     "/ssh/rename": views.rename,
     "/create/file": views.create_file,
     "/create/folder": views.create_folder,
-    "/shell": views.shell
+    "/shell": views.shell,
+    "/exec": views.exec,
+    "/resource/js/app.js": views.appjs #To use render variabled
 }

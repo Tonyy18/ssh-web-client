@@ -4,6 +4,9 @@ from app import urls
 import webbrowser
 from urllib.parse import unquote
 
+port = 3030
+address = "http://127.0.0.1:" + str(port)
+
 class Server(BaseHTTPRequestHandler):
 	def do_GET(self):
 		self.send({
@@ -66,22 +69,31 @@ class Server(BaseHTTPRequestHandler):
 			pass
 		try:
 			self.wfile.write(data)
-		except:
-			print("Couldn't return the response")
+		except Exception as e:
+			print("Couldn't return the response:")
+			print(e)
+			print()
 
 	def log_message(self, format, *args):
 		return
 	
-
-def run():
-	port = 3030
-	address = "http://127.0.0.1:" + str(port)
-	webServer = HTTPServer(("localhost", port), Server)
-	try:
+	@classmethod
+	def post_start(cls):
+		#Callback for the server start
 		print()
 		print("SSH Client hosted on " + address)
 		print()
-		#webbrowser.open(address)
+		webbrowser.open(address)
+
+class CallbackHTTPServer(HTTPServer):
+
+    def server_activate(self):
+        HTTPServer.server_activate(self)
+        self.RequestHandlerClass.post_start()
+
+def run():
+	webServer = CallbackHTTPServer(("localhost", port), Server)
+	try:
 		webServer.serve_forever()
 	except KeyboardInterrupt:
 		webServer.server_close()

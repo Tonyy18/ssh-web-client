@@ -36,6 +36,9 @@ const read_file = (file, callback) => {
         url: "/ssh/get/file",
         data: {path:file},
         success: function(data) {
+            if(typeof data != "object" || !("content" in data)) {
+                data = {"content": ""}
+            }
             if(callback && typeof callback == "function") callback(data["content"]);
         }
     })

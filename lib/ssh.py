@@ -27,7 +27,7 @@ class SSH:
         if(self.sftp != None):
             self.sftp.close()
 
-    def exec(self, command):
+    def exec(self, command, modify = True):
         stdin, stdout, stderr = self.client.exec_command(command)
         content = stdout.read()
         try:
@@ -35,7 +35,7 @@ class SSH:
         except:
             pass
 
-        if("ls" in command.split(" ")):
+        if("ls" in command.split(" ") and modify):
             content = content.split("\n")
             content.pop(len(content) - 1)
             filter(lambda a : a != "", content) #remove empty indexes

@@ -150,8 +150,25 @@ def create_folder(request):
 def shell(request):
     global client
     if(client != None and client.connected):
+        return response("In development")
         return render("shell.html", {
             "host": client.host,
             "user": client.username
         })
     return redirect("/")
+
+def exec(request):
+    global client
+    if(client != None and client.connected):
+        command = request["body"]["command"]
+        data = client.exec(command, False)
+        return response(data)
+    return redirect(status=404)
+
+def appjs(request):
+    global client
+    if(client != None and client.connected):
+        path = client.exec("pwd").strip()
+        return render("/resource/js/app.js", {
+            "dir": path
+        })
