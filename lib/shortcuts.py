@@ -55,10 +55,11 @@ def render(file, data = {}):
         with open(path, 'rb') as f:
             content = f.read()
             f.close()
-        if(extension == "html"):
-            tm = Template(content.decode("utf8"))
-            content = tm.render(data=data)
+
+        tm = Template(content.decode("utf8"))
+        content = tm.render(data=data)
     except Exception as e:
+        print(file + ": " + str(e))
         content = ""
         status = 404
 

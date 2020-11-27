@@ -8,8 +8,8 @@ def parse_url(url):
     for field in fields:
         split = field.split("=")
         if(len(split) == 1):
-            results[unquote(split[0]).replace("%20", " ")] = None
+            results[unquote(split[0]).replace("%20", " ").replace("+", " ")] = None
         else:
-            results[unquote(split[0]).replace("%20", " ")] = unquote(split[1]).replace("%20", " ")
+            results[unquote(split[0]).replace("%20", " ").replace("+", " ")] = unquote(split[1]).replace("%20", " ").replace("+", " ")
         
     return results

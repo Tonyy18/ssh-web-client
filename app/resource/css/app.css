@@ -2,6 +2,9 @@
 .container {
     padding-bottom: 50px;
 }
+html, body {
+    height: 100%;
+}
 header {
     padding: 20px 0;
 }
@@ -109,4 +112,38 @@ h5 {
 }
 .CodeMirror {
     height: calc(100% - 150px);
+}
+#shell .container {
+    height: 100%;
+}
+.shell {
+    background-color: #FAFAFA;
+    height: calc(100% - 150px);
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+    padding: 10px;
+}
+.shell * {
+    font-family: Lucida Console,Lucida Sans Typewriter,monaco,Bitstream Vera Sans Mono,monospace;
+    font-size: 14px;
+}
+.shell .row {
+    display: flex;
+    padding: 0 20px;
+    align-content: center;
+}
+.shell .row .prefix {
+    margin-right: 10px;
+    vertical-align: center;
+}
+.shell .row .text {
+    flex-grow: 1;
+}
+.shell .row input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: default;
+    width: 100%;
+    padding: 0px;
 }

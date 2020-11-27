@@ -18,7 +18,7 @@
     <header>
         <h1>Host: {{ data["host"] }}</h1>
         <a type="button" class="btn btn-light">Settings</a>
-        <a type="button" class="btn btn-light">Console</a>
+        <a type="button" class="btn btn-light" target="_blank" href="/shell">Shell</a>
         <a type="button" class="btn btn-light" id="update">Update</a>
         <a type="button" class="btn btn-light" href="/ssh/close">Disconnected</a>
         <p>Logged in as {{ data["user"] }}</p>
@@ -107,7 +107,7 @@
     </ul>
 </div>
 <script>
-const host = '{{ data["host"] }}'
+const host = '{{ data["host"] }}';
 </script>
 <script src="/resource/js/app.js"></script>
 </body>
