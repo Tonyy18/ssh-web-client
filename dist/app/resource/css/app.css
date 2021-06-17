@@ -1,0 +1,149 @@
+
+.container {
+    padding-bottom: 50px;
+}
+html, body {
+    height: 100%;
+}
+header {
+    padding: 20px 0;
+}
+header h1 {
+    display: inline-block;
+}
+header a {
+    float: right;
+    margin-left: 10px;
+}
+.breadcrumb {
+    background-color: white; /*#F4F5F5*/
+    border-bottom: 1px solid #E2E2E2;
+    border-radius: 0px;
+    margin-bottom: 10px;
+}
+a .spinner,
+li .spinner,
+button .spinner {
+    height: 1em;
+    width: 1em;
+}
+h1 {
+    font-size: 30px;
+    font-weight: 300;
+}
+h5 {
+    font-weight: 300;
+}
+.pagination li:last-child {
+    margin-left: 10px;
+}
+#directory {
+    user-select: none;
+}
+#directory > li {
+    cursor: default;
+}
+#directory > li.list-group-item .text {
+    margin-left: 15px;
+    display: inline-block;
+}
+#directory > li input {
+    height: 1.5em;
+    margin-left: 15px;
+    width: calc(100% - 50px);
+    padding: 0px;
+    outline: none;
+    border: none;
+    display: none;
+    background-color: #FAFAFA;
+}
+#directory > li.editing {
+    border-left: 3px solid red;
+}
+#directory > li.editing input {
+    display: inline-block;
+}
+#directory > li.editing .text {
+    display: none;
+}
+#directory > li.list-group-item.interactive:hover,
+#directory > li.list-group-item.interactive.selected {
+    background-color: #F5F5F5;
+}
+#directory > li.list-group-item.selected {
+    border-left: 3px solid lightblue;
+}
+#directory > li.list-group-item .icon-right {
+    display: none;
+    float: right;
+    margin-left: 20px;
+}
+#directory > li.list-group-item .icon-right svg {
+    color: DarkGray;
+}
+#directory > li.list-group-item.interactive:hover .icon-right  {
+    display: block;
+}
+#directory > li.list-group-item .icon-right:hover svg {
+    color: black;
+    cursor: pointer;
+}
+#directory .empty {
+    text-align: center;
+    font-size: 18px;
+    display: block;
+    color: darkgray;
+}
+.dir-actions {
+    margin-bottom: 5px;
+}
+.dir-actions .btn {
+    font-size: 12px;
+    padding: 3px 8px;
+    margin-bottom: 5px;
+}
+#file_reader .actions {
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+#file_reader .actions h5 {
+    margin-right: 15px;
+}
+.CodeMirror {
+    height: calc(100% - 150px);
+}
+#shell .container {
+    height: 100%;
+}
+.shell {
+    background-color: #FAFAFA;
+    height: calc(100% - 150px);
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+    padding: 10px;
+}
+.shell * {
+    font-family: Lucida Console,Lucida Sans Typewriter,monaco,Bitstream Vera Sans Mono,monospace;
+    font-size: 14px;
+}
+.shell .row {
+    display: flex;
+    padding: 0 20px;
+    align-content: center;
+}
+.shell .row .prefix {
+    margin-right: 10px;
+    vertical-align: center;
+}
+.shell .row .text {
+    flex-grow: 1;
+}
+.shell .row input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: default;
+    width: 100%;
+    padding: 0px;
+}

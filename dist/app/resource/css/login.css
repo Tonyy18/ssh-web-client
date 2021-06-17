@@ -1,0 +1,30 @@
+.container {
+    padding-top: 10vh;
+}
+.alert {
+    display: none;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+}
+.alert .text {
+    display: inline-block;
+}
+.container h1 {
+    text-align: center;
+    padding-bottom: 50px;
+}
+
+.container form {
+    width: 400px;
+    margin: 0 auto;
+}
+.container form button {
+    outline: none;
+}
+.container form .spinner {
+    display: none
+}
+.container form.loading .spinner {
+    display: inline-block;
+}
